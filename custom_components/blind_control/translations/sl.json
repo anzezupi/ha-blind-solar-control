@@ -1,0 +1,371 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Dodaj senčilo",
+        "description": "Izberi entiteto senčila (cover), ki jo bo integracija krmilila.",
+        "data": {
+          "name": "Ime",
+          "cover_entity": "Senčilo (cover)",
+          "blind_type": "Tip"
+        }
+      },
+      "window": {
+        "title": "Orientacija okna",
+        "description": "Azimut je smer neba, v katero gleda okno, ko pogledaš ven (0° S, 90° V, 180° J, 270° Z).",
+        "data": {
+          "azimuth": "Azimut okna",
+          "fov_left": "Vidno polje levo",
+          "fov_right": "Vidno polje desno",
+          "min_elevation": "Najnižja višina sonca",
+          "max_elevation": "Najvišja višina sonca",
+          "horizon_profile": "Ovire (profil horizonta)",
+          "window_height": "Višina okna",
+          "sill_height": "Višina parapeta od tal",
+          "shade_depth": "Največja globina sonca v sobo",
+          "tilt_mode": "Način nagiba lamel",
+          "tilt_invert": "Obrni nagib",
+          "slat_width": "Širina lamele",
+          "slat_spacing": "Razmik med lamelami",
+          "tilt_margin": "Dodatno zapiranje lamel"
+        },
+        "data_description": {
+          "fov_left": "Koliko stopinj levo od pravokotnice sonce še sije na steklo (špaleta, stene).",
+          "fov_right": "Koliko stopinj desno od pravokotnice sonce še sije na steklo.",
+          "min_elevation": "Pod to višino se sonce ignorira (npr. hribi).",
+          "max_elevation": "Nad to višino okno zasenči balkon ali napušč.",
+          "horizon_profile": "Neobvezne ovire kot razponi azimuta z višino, npr. `90-130:15, 240-270:25` (stavbe, drevesa).",
+          "shade_depth": "Pri senčenju se rolo ustavi tako, da direktno sonce seže največ toliko v sobo. 0 = uporabi fiksni položaj senčenja.",
+          "tilt_mode": "Kako naprava preslika odstotek nagiba v kot lamel.",
+          "slat_spacing": "Navpična razdalja med lamelami (običajno malo manj od širine).",
+          "tilt_margin": "Lamele zapri za toliko stopinj bolj, kot je nujno."
+        }
+      },
+      "climate": {
+        "title": "Klima in sonce",
+        "description": "Vsi senzorji so neobvezni. Brez temperatur integracija uporabi zunanjo temperaturo ali izbrano strategijo.",
+        "data": {
+          "indoor_temperature": "Notranja temperatura",
+          "outdoor_temperature": "Zunanja temperatura (senzor ali vreme)",
+          "weather_entity": "Vreme (zaznava oblačnosti)",
+          "lux_entity": "Senzor osvetljenosti",
+          "lux_threshold": "Direktno sonce nad",
+          "presence_entity": "Prisotnost",
+          "heat_setpoint": "Grej s soncem pod",
+          "cool_setpoint": "Senči pred soncem nad",
+          "outdoor_heat_below": "Zunaj: kurilna sezona pod",
+          "outdoor_cool_above": "Zunaj: vroč dan nad",
+          "hysteresis": "Histereza",
+          "glare_protection": "Zaščita pred bleščanjem, ko je prijetno"
+        },
+        "data_description": {
+          "heat_setpoint": "Soba hladnejša od tega: odpri, da jo sonce segreje.",
+          "cool_setpoint": "Soba toplejša od tega: zapri pred soncem.",
+          "outdoor_cool_above": "Na vroče dni senči preventivno, četudi je v sobi še prijetno.",
+          "presence_entity": "Če na vroč dan ni nikogar doma, se senčilo zapre do konca.",
+          "glare_protection": "Senči tudi, ko je temperatura med obema pragovoma."
+        }
+      },
+      "reconfigure": {
+        "title": "Ponovna nastavitev senčila",
+        "data": {
+          "name": "Ime",
+          "cover_entity": "Senčilo (cover)",
+          "blind_type": "Tip"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "To senčilo že krmili Blind Control.",
+      "reconfigure_successful": "Nastavitev uspešno posodobljena."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Nastavitve Blind Control",
+        "menu_options": {
+          "geometry": "Orientacija okna",
+          "climate": "Klima in sonce",
+          "positions": "Položaji",
+          "protection": "Zaščita: veter, dež, vrata",
+          "behaviour": "Obnašanje in ročno upravljanje",
+          "rules": "Pravila urnika",
+          "save": "Shrani in zapri"
+        }
+      },
+      "geometry": {
+        "title": "Orientacija okna",
+        "data": {
+          "azimuth": "Azimut okna",
+          "fov_left": "Vidno polje levo",
+          "fov_right": "Vidno polje desno",
+          "min_elevation": "Najnižja višina sonca",
+          "max_elevation": "Najvišja višina sonca",
+          "horizon_profile": "Ovire (profil horizonta)",
+          "window_height": "Višina okna",
+          "sill_height": "Višina parapeta od tal",
+          "shade_depth": "Največja globina sonca v sobo",
+          "tilt_mode": "Način nagiba lamel",
+          "tilt_invert": "Obrni nagib",
+          "slat_width": "Širina lamele",
+          "slat_spacing": "Razmik med lamelami",
+          "tilt_margin": "Dodatno zapiranje lamel"
+        },
+        "data_description": {
+          "horizon_profile": "Neobvezne ovire kot razponi azimuta z višino, npr. `90-130:15, 240-270:25`.",
+          "shade_depth": "0 = uporabi fiksni položaj senčenja."
+        }
+      },
+      "climate": {
+        "title": "Klima in sonce",
+        "data": {
+          "indoor_temperature": "Notranja temperatura",
+          "outdoor_temperature": "Zunanja temperatura (senzor ali vreme)",
+          "weather_entity": "Vreme (zaznava oblačnosti)",
+          "lux_entity": "Senzor osvetljenosti",
+          "lux_threshold": "Direktno sonce nad",
+          "presence_entity": "Prisotnost",
+          "heat_setpoint": "Grej s soncem pod",
+          "cool_setpoint": "Senči pred soncem nad",
+          "outdoor_heat_below": "Zunaj: kurilna sezona pod",
+          "outdoor_cool_above": "Zunaj: vroč dan nad",
+          "hysteresis": "Histereza",
+          "glare_protection": "Zaščita pred bleščanjem, ko je prijetno"
+        }
+      },
+      "positions": {
+        "title": "Položaji",
+        "description": "0 % = zaprto, 100 % = odprto (markize: 0 % zložena, 100 % iztegnjena).",
+        "data": {
+          "default_position": "Privzeto (brez sonca)",
+          "default_tilt": "Privzeti nagib",
+          "heat_position": "Ogrevanje s soncem",
+          "shade_position": "Senčenje (fiksno)",
+          "shade_min_position": "Senčenje: nikoli pod",
+          "away_position": "Vroče in nikogar doma",
+          "position_step": "Zaokroži izračunane položaje na"
+        }
+      },
+      "protection": {
+        "title": "Zaščita",
+        "data": {
+          "wind_entity": "Senzor hitrosti vetra",
+          "wind_threshold": "Alarm vetra pri",
+          "rain_entity": "Senzor dežja",
+          "safety_position": "Varnostni položaj",
+          "safety_release": "Sprosti po mirovanju",
+          "contact_entity": "Kontakt vrat / okna",
+          "lockout_position": "Najmanjši položaj, ko je odprto"
+        },
+        "data_description": {
+          "safety_position": "Položaj med alarmom vetra / dežja. Pusti prazno za ignoriranje alarmov.",
+          "lockout_position": "Prepreči, da bi te roleta zaprla na balkonu."
+        }
+      },
+      "behaviour": {
+        "title": "Obnašanje",
+        "data": {
+          "override_minutes": "Premor po ročni spremembi",
+          "override_until_rule": "…a največ do naslednje spremembe pravila",
+          "override_tolerance": "Toleranca ročne spremembe",
+          "min_interval": "Najmanjši čas med premiki",
+          "min_delta": "Najmanjša sprememba položaja",
+          "update_interval": "Preračunaj vsakih",
+          "settle_time": "Po ukazu ignoriraj poročila senčila",
+          "invert_position": "Obrni položaj",
+          "dry_run": "Simulacija (ne premikaj)"
+        },
+        "data_description": {
+          "dry_run": "Računa in prikazuje cilje, ukazov pa ne pošilja – idealno za nastavljanje."
+        }
+      },
+      "rules": {
+        "title": "Pravila urnika",
+        "description": "Zmaga aktivno pravilo z najvišjo prioriteto. Izven pravil senčilo deluje samodejno.\n\n{rules}",
+        "menu_options": {
+          "rule_add": "Dodaj pravilo",
+          "rule_edit": "Uredi pravilo",
+          "rule_delete": "Izbriši pravilo",
+          "init": "Nazaj"
+        }
+      },
+      "rule_edit": {
+        "title": "Uredi pravilo",
+        "data": { "id": "Pravilo" }
+      },
+      "rule_delete": {
+        "title": "Izbriši pravilo",
+        "data": { "id": "Pravilo" }
+      },
+      "rule_form": {
+        "title": "Pravilo",
+        "description": "Dnevi se nanašajo na začetek. Če je konec pred začetkom, pravilo teče čez polnoč.",
+        "data": {
+          "name": "Ime",
+          "days": "Dnevi",
+          "start_type": "Začetek",
+          "start_time": "Čas začetka",
+          "start_offset": "Zamik začetka",
+          "end_type": "Konec",
+          "end_time": "Čas konca",
+          "end_offset": "Zamik konca",
+          "action": "Akcija",
+          "position": "Položaj",
+          "tilt": "Nagib",
+          "priority": "Prioriteta",
+          "condition": "Pogoj (predloga)"
+        },
+        "data_description": {
+          "start_time": "Upošteva se le, če je začetek 'Fiksni čas'.",
+          "start_offset": "Minute, prištete začetku (negativno = prej).",
+          "end_time": "Upošteva se le, če je konec 'Fiksni čas'.",
+          "condition": "Neobvezna Jinja predloga. Pravilo velja le, ko je rezultat resničen (npr. pomočnik za dopust je vklopljen)."
+        }
+      }
+    },
+    "error": {
+      "no_days": "Izberi vsaj en dan.",
+      "empty_interval": "Začetek in konec sta enaka.",
+      "position_required": "Akcija 'Fiksni položaj' potrebuje položaj."
+    }
+  },
+  "selector": {
+    "blind_type": {
+      "options": {
+        "roller_blind": "Notranji rolo",
+        "roller_shutter": "Zunanja roleta",
+        "venetian": "Žaluzije (položaj + nagib)",
+        "tilt_only": "Lamelna polkna / pergola (samo nagib)",
+        "curtain": "Zavesa",
+        "awning": "Markiza"
+      }
+    },
+    "tilt_mode": {
+      "options": {
+        "none": "Brez nagiba",
+        "90": "0 % zaprto → 100 % vodoravno",
+        "180": "0 % zaprto → 50 % vodoravno → 100 % zaprto"
+      }
+    },
+    "time_kind": {
+      "options": {
+        "time": "Fiksni čas",
+        "sunrise": "Sončni vzhod",
+        "sunset": "Sončni zahod"
+      }
+    },
+    "action": {
+      "options": {
+        "auto": "Samodejno (sonce in klima)",
+        "open": "Odpri",
+        "close": "Zapri",
+        "position": "Fiksni položaj",
+        "tilt": "Spuščeno, lamele na fiksnem nagibu",
+        "tilt_auto": "Spuščeno, lamele sledijo soncu",
+        "shade_only": "Samo zaščita pred soncem",
+        "skip": "Ne naredi nič (ročno)"
+      }
+    },
+    "weekday": {
+      "options": {
+        "mon": "Ponedeljek",
+        "tue": "Torek",
+        "wed": "Sreda",
+        "thu": "Četrtek",
+        "fri": "Petek",
+        "sat": "Sobota",
+        "sun": "Nedelja"
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "target_position": { "name": "Ciljni položaj" },
+      "reason": {
+        "name": "Razlog",
+        "state": {
+          "disabled": "Izklopljeno",
+          "safety": "Zaščita pred vetrom / dežjem",
+          "manual_override": "Ročni poseg",
+          "rule_skip": "Pravilo: ročno",
+          "rule_open": "Pravilo: odprto",
+          "rule_close": "Pravilo: zaprto",
+          "rule_position": "Pravilo: položaj",
+          "rule_tilt": "Pravilo: nagib",
+          "heat_gain": "Ogrevanje s soncem",
+          "cooling_shade": "Senčenje (prevroče)",
+          "glare_shade": "Zaščita pred bleščanjem",
+          "away_shade": "Zaprto (vroče, nikogar doma)",
+          "no_sun": "Ni sonca na oknu",
+          "strategy_off": "Sončna logika izklopljena"
+        }
+      },
+      "climate": {
+        "name": "Potreba sobe",
+        "state": {
+          "heat": "Gretje",
+          "cool": "Hlajenje",
+          "neutral": "Prijetno"
+        }
+      },
+      "profile_angle": { "name": "Profilni kot sonca" },
+      "sun_enters": { "name": "Sonce pride na okno" },
+      "sun_leaves": { "name": "Sonce zapusti okno" },
+      "next_change": { "name": "Naslednja sprememba urnika" }
+    },
+    "binary_sensor": {
+      "sun_in_window": { "name": "Sonce na oknu" },
+      "manual_override": { "name": "Ročni poseg" },
+      "safety": { "name": "Alarm veter / dež" }
+    },
+    "switch": {
+      "automation": { "name": "Avtomatika" }
+    },
+    "select": {
+      "strategy": {
+        "name": "Strategija",
+        "state": {
+          "auto": "Samodejno",
+          "heating": "Zima (grej s soncem)",
+          "cooling": "Poletje (blokiraj sonce)",
+          "glare": "Samo zaščita pred bleščanjem",
+          "off": "Sončna logika izklopljena"
+        }
+      }
+    },
+    "button": {
+      "resume": { "name": "Nadaljuj avtomatiko" },
+      "recalculate": { "name": "Preračunaj" }
+    }
+  },
+  "exceptions": {
+    "entry_not_found": {
+      "message": "Ni naloženega senčila Blind Control z id {entry_id}."
+    }
+  },
+  "services": {
+    "resume": {
+      "name": "Nadaljuj avtomatiko",
+      "description": "Počisti ročne posege in premakne senčila na samodejni cilj.",
+      "fields": {
+        "config_entry_id": { "name": "Senčilo", "description": "Prazno = vsa senčila." }
+      }
+    },
+    "pause": {
+      "name": "Začasno ustavi avtomatiko",
+      "description": "Ustavi avtomatiko za določeno število minut.",
+      "fields": {
+        "config_entry_id": { "name": "Senčilo", "description": "Prazno = vsa senčila." },
+        "minutes": { "name": "Minute", "description": "Kako dolgo naj bo ustavljeno." }
+      }
+    },
+    "recalculate": {
+      "name": "Preračunaj",
+      "description": "Takoj preračuna in ponovno uporabi cilj.",
+      "fields": {
+        "config_entry_id": { "name": "Senčilo", "description": "Prazno = vsa senčila." }
+      }
+    }
+  }
+}

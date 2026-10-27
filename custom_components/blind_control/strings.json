@@ -1,0 +1,371 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add a blind",
+        "description": "Pick the cover entity this automation should control.",
+        "data": {
+          "name": "Name",
+          "cover_entity": "Cover entity",
+          "blind_type": "Type"
+        }
+      },
+      "window": {
+        "title": "Window orientation",
+        "description": "Azimuth is the compass direction the window faces when you look out (0° N, 90° E, 180° S, 270° W).",
+        "data": {
+          "azimuth": "Window azimuth",
+          "fov_left": "Field of view left",
+          "fov_right": "Field of view right",
+          "min_elevation": "Minimum sun elevation",
+          "max_elevation": "Maximum sun elevation",
+          "horizon_profile": "Obstacles (horizon profile)",
+          "window_height": "Window height",
+          "sill_height": "Sill height above floor",
+          "shade_depth": "Max. sun depth into room",
+          "tilt_mode": "Tilt mode",
+          "tilt_invert": "Invert tilt",
+          "slat_width": "Slat width",
+          "slat_spacing": "Slat spacing",
+          "tilt_margin": "Extra slat closing"
+        },
+        "data_description": {
+          "fov_left": "How far left of straight-out the sun still reaches the glass (side walls, reveals).",
+          "fov_right": "How far right of straight-out the sun still reaches the glass.",
+          "min_elevation": "Below this elevation the sun is ignored (e.g. low hills).",
+          "max_elevation": "Above this elevation a balcony or roof overhang shades the window.",
+          "horizon_profile": "Optional obstacles as azimuth ranges with height, e.g. `90-130:15, 240-270:25` (buildings, trees).",
+          "shade_depth": "When shading, roller blinds stop so that direct sun reaches at most this far into the room. 0 = use fixed shade position.",
+          "tilt_mode": "How the device maps tilt percent to slat angle.",
+          "slat_spacing": "Vertical distance between slats (usually a bit less than the width).",
+          "tilt_margin": "Close slats this many degrees more than strictly needed."
+        }
+      },
+      "climate": {
+        "title": "Climate and sun",
+        "description": "All sensors are optional. Without temperatures the integration only uses the outdoor temperature or the selected strategy.",
+        "data": {
+          "indoor_temperature": "Indoor temperature",
+          "outdoor_temperature": "Outdoor temperature (sensor or weather)",
+          "weather_entity": "Weather (cloud detection)",
+          "lux_entity": "Illuminance sensor",
+          "lux_threshold": "Direct sun above",
+          "presence_entity": "Presence",
+          "heat_setpoint": "Heat with sun below",
+          "cool_setpoint": "Shade from sun above",
+          "outdoor_heat_below": "Outdoor: heating season below",
+          "outdoor_cool_above": "Outdoor: hot day above",
+          "hysteresis": "Hysteresis",
+          "glare_protection": "Glare protection when comfortable"
+        },
+        "data_description": {
+          "heat_setpoint": "Room below this temperature: open to let the sun heat it.",
+          "cool_setpoint": "Room above this temperature: block the sun.",
+          "outdoor_cool_above": "Shade pre-emptively on hot days even if the room is still comfortable.",
+          "presence_entity": "When nobody is home on a hot day the blind closes completely.",
+          "glare_protection": "Also shade when the room temperature is between both thresholds."
+        }
+      },
+      "reconfigure": {
+        "title": "Reconfigure blind",
+        "data": {
+          "name": "Name",
+          "cover_entity": "Cover entity",
+          "blind_type": "Type"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "This cover is already controlled by Blind Control.",
+      "reconfigure_successful": "Reconfiguration successful."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Blind Control settings",
+        "menu_options": {
+          "geometry": "Window orientation",
+          "climate": "Climate and sun",
+          "positions": "Positions",
+          "protection": "Wind, rain and door protection",
+          "behaviour": "Behaviour and manual control",
+          "rules": "Schedule rules",
+          "save": "Save and close"
+        }
+      },
+      "geometry": {
+        "title": "Window orientation",
+        "data": {
+          "azimuth": "Window azimuth",
+          "fov_left": "Field of view left",
+          "fov_right": "Field of view right",
+          "min_elevation": "Minimum sun elevation",
+          "max_elevation": "Maximum sun elevation",
+          "horizon_profile": "Obstacles (horizon profile)",
+          "window_height": "Window height",
+          "sill_height": "Sill height above floor",
+          "shade_depth": "Max. sun depth into room",
+          "tilt_mode": "Tilt mode",
+          "tilt_invert": "Invert tilt",
+          "slat_width": "Slat width",
+          "slat_spacing": "Slat spacing",
+          "tilt_margin": "Extra slat closing"
+        },
+        "data_description": {
+          "horizon_profile": "Optional obstacles as azimuth ranges with height, e.g. `90-130:15, 240-270:25`.",
+          "shade_depth": "0 = use fixed shade position."
+        }
+      },
+      "climate": {
+        "title": "Climate and sun",
+        "data": {
+          "indoor_temperature": "Indoor temperature",
+          "outdoor_temperature": "Outdoor temperature (sensor or weather)",
+          "weather_entity": "Weather (cloud detection)",
+          "lux_entity": "Illuminance sensor",
+          "lux_threshold": "Direct sun above",
+          "presence_entity": "Presence",
+          "heat_setpoint": "Heat with sun below",
+          "cool_setpoint": "Shade from sun above",
+          "outdoor_heat_below": "Outdoor: heating season below",
+          "outdoor_cool_above": "Outdoor: hot day above",
+          "hysteresis": "Hysteresis",
+          "glare_protection": "Glare protection when comfortable"
+        }
+      },
+      "positions": {
+        "title": "Positions",
+        "description": "0 % = closed, 100 % = open (awnings: 0 % retracted, 100 % extended).",
+        "data": {
+          "default_position": "Default (no sun)",
+          "default_tilt": "Default tilt",
+          "heat_position": "Heat gain",
+          "shade_position": "Shade (fixed)",
+          "shade_min_position": "Shade: never below",
+          "away_position": "Hot and nobody home",
+          "position_step": "Round computed positions to"
+        }
+      },
+      "protection": {
+        "title": "Protection",
+        "data": {
+          "wind_entity": "Wind speed sensor",
+          "wind_threshold": "Wind alarm at",
+          "rain_entity": "Rain sensor",
+          "safety_position": "Safety position",
+          "safety_release": "Release after calm for",
+          "contact_entity": "Door / window contact",
+          "lockout_position": "Minimum position while open"
+        },
+        "data_description": {
+          "safety_position": "Position during wind / rain alarm. Leave empty to ignore alarms.",
+          "lockout_position": "Prevents locking yourself out on the balcony."
+        }
+      },
+      "behaviour": {
+        "title": "Behaviour",
+        "data": {
+          "override_minutes": "Pause after manual change",
+          "override_until_rule": "…but at most until the next rule change",
+          "override_tolerance": "Manual change tolerance",
+          "min_interval": "Minimum time between moves",
+          "min_delta": "Minimum position change",
+          "update_interval": "Recalculate every",
+          "settle_time": "Ignore cover reports after a command for",
+          "invert_position": "Invert position",
+          "dry_run": "Simulation (do not move)"
+        },
+        "data_description": {
+          "dry_run": "Calculate and show targets without sending commands – ideal for tuning."
+        }
+      },
+      "rules": {
+        "title": "Schedule rules",
+        "description": "The active rule with the highest priority wins. Outside all rules the blind runs in automatic mode.\n\n{rules}",
+        "menu_options": {
+          "rule_add": "Add rule",
+          "rule_edit": "Edit rule",
+          "rule_delete": "Delete rule",
+          "init": "Back"
+        }
+      },
+      "rule_edit": {
+        "title": "Edit rule",
+        "data": { "id": "Rule" }
+      },
+      "rule_delete": {
+        "title": "Delete rule",
+        "data": { "id": "Rule" }
+      },
+      "rule_form": {
+        "title": "Rule",
+        "description": "Weekdays refer to the start. If the end is earlier than the start the rule runs overnight.",
+        "data": {
+          "name": "Name",
+          "days": "Days",
+          "start_type": "Start",
+          "start_time": "Start time",
+          "start_offset": "Start offset",
+          "end_type": "End",
+          "end_time": "End time",
+          "end_offset": "End offset",
+          "action": "Action",
+          "position": "Position",
+          "tilt": "Tilt",
+          "priority": "Priority",
+          "condition": "Condition (template)"
+        },
+        "data_description": {
+          "start_time": "Used only when start is 'Fixed time'.",
+          "start_offset": "Minutes added to the start (negative = earlier).",
+          "end_time": "Used only when end is 'Fixed time'.",
+          "condition": "Optional Jinja template. The rule only applies while it renders true (e.g. a vacation helper is on)."
+        }
+      }
+    },
+    "error": {
+      "no_days": "Pick at least one day.",
+      "empty_interval": "Start and end are identical.",
+      "position_required": "The action 'Position' needs a position."
+    }
+  },
+  "selector": {
+    "blind_type": {
+      "options": {
+        "roller_blind": "Roller blind (interior)",
+        "roller_shutter": "Roller shutter (exterior)",
+        "venetian": "Venetian blind (position + tilt)",
+        "tilt_only": "Louvred shutter / pergola (tilt only)",
+        "curtain": "Curtain",
+        "awning": "Awning"
+      }
+    },
+    "tilt_mode": {
+      "options": {
+        "none": "No tilt",
+        "90": "0 % closed → 100 % horizontal",
+        "180": "0 % closed → 50 % horizontal → 100 % closed"
+      }
+    },
+    "time_kind": {
+      "options": {
+        "time": "Fixed time",
+        "sunrise": "Sunrise",
+        "sunset": "Sunset"
+      }
+    },
+    "action": {
+      "options": {
+        "auto": "Automatic (sun and climate)",
+        "open": "Open",
+        "close": "Close",
+        "position": "Fixed position",
+        "tilt": "Closed, slats at fixed tilt",
+        "tilt_auto": "Closed, slats follow the sun",
+        "shade_only": "Only protect from sun",
+        "skip": "Do nothing (manual)"
+      }
+    },
+    "weekday": {
+      "options": {
+        "mon": "Monday",
+        "tue": "Tuesday",
+        "wed": "Wednesday",
+        "thu": "Thursday",
+        "fri": "Friday",
+        "sat": "Saturday",
+        "sun": "Sunday"
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "target_position": { "name": "Target position" },
+      "reason": {
+        "name": "Reason",
+        "state": {
+          "disabled": "Disabled",
+          "safety": "Wind / rain protection",
+          "manual_override": "Manual override",
+          "rule_skip": "Rule: manual",
+          "rule_open": "Rule: open",
+          "rule_close": "Rule: closed",
+          "rule_position": "Rule: position",
+          "rule_tilt": "Rule: tilt",
+          "heat_gain": "Heating with sun",
+          "cooling_shade": "Shading (too warm)",
+          "glare_shade": "Glare protection",
+          "away_shade": "Closed (hot, nobody home)",
+          "no_sun": "No sun on window",
+          "strategy_off": "Sun logic off"
+        }
+      },
+      "climate": {
+        "name": "Room needs",
+        "state": {
+          "heat": "Heat",
+          "cool": "Cooling",
+          "neutral": "Comfortable"
+        }
+      },
+      "profile_angle": { "name": "Sun profile angle" },
+      "sun_enters": { "name": "Sun enters window" },
+      "sun_leaves": { "name": "Sun leaves window" },
+      "next_change": { "name": "Next schedule change" }
+    },
+    "binary_sensor": {
+      "sun_in_window": { "name": "Sun on window" },
+      "manual_override": { "name": "Manual override" },
+      "safety": { "name": "Wind / rain alarm" }
+    },
+    "switch": {
+      "automation": { "name": "Automation" }
+    },
+    "select": {
+      "strategy": {
+        "name": "Strategy",
+        "state": {
+          "auto": "Automatic",
+          "heating": "Winter (use sun for heating)",
+          "cooling": "Summer (block sun)",
+          "glare": "Glare protection only",
+          "off": "Sun logic off"
+        }
+      }
+    },
+    "button": {
+      "resume": { "name": "Resume automation" },
+      "recalculate": { "name": "Recalculate" }
+    }
+  },
+  "exceptions": {
+    "entry_not_found": {
+      "message": "No loaded Blind Control entry with id {entry_id}."
+    }
+  },
+  "services": {
+    "resume": {
+      "name": "Resume automation",
+      "description": "Clears manual overrides and moves blinds to their automatic target.",
+      "fields": {
+        "config_entry_id": { "name": "Blind", "description": "Leave empty for all blinds." }
+      }
+    },
+    "pause": {
+      "name": "Pause automation",
+      "description": "Pauses automation for a number of minutes.",
+      "fields": {
+        "config_entry_id": { "name": "Blind", "description": "Leave empty for all blinds." },
+        "minutes": { "name": "Minutes", "description": "How long to pause." }
+      }
+    },
+    "recalculate": {
+      "name": "Recalculate",
+      "description": "Recalculates and re-applies the target immediately.",
+      "fields": {
+        "config_entry_id": { "name": "Blind", "description": "Leave empty for all blinds." }
+      }
+    }
+  }
+}
