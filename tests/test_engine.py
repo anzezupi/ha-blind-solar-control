@@ -107,7 +107,12 @@ def test_climate_hysteresis():
     assert climate_state(Climate.HEAT, 21.6, None, cfg) is Climate.NEUTRAL
     assert climate_state(Climate.NEUTRAL, 25, None, cfg) is Climate.COOL
     assert climate_state(Climate.COOL, 24.2, None, cfg) is Climate.COOL
-    assert climate_state(Climate.NEUTRAL, 22, 30, cfg) is Climate.COOL  # hot day pre-emptive
+    assert climate_state(Climate.NEUTRAL, 22, 30, cfg) is Climate.PRECOOL  # hot day pre-emptive
+    assert climate_state(Climate.NEUTRAL, 22, 10, cfg, t_out_max=28) is Climate.PRECOOL  # forecast high
+    assert climate_state(Climate.NEUTRAL, 22, 10, cfg, t_predicted=25) is Climate.PRECOOL  # sun will overheat
+    assert climate_state(Climate.PRECOOL, 22, 10, cfg, t_predicted=24.3) is Climate.PRECOOL  # hysteresis
+    assert climate_state(Climate.NEUTRAL, 22, 10, cfg, t_predicted=24.3) is Climate.NEUTRAL
+    assert climate_state(Climate.NEUTRAL, 20, 10, cfg, t_predicted=26) is Climate.HEAT  # cold now wins
     assert climate_state(Climate.NEUTRAL, None, 5, cfg) is Climate.HEAT
     assert climate_state(Climate.NEUTRAL, None, None, cfg) is Climate.NEUTRAL
 
@@ -191,3 +196,18 @@ def test_awning_extends_for_shade():
     )
     assert eng.decide(Inputs(180, 40, climate=Climate.COOL)).position == 100
     assert eng.decide(Inputs(180, 40, climate=Climate.HEAT)).position == 0
+
+
+def test_predictive_shade_reason():
+    d = _engine().decide(Inputs(180, 20, climate=Climate.PRECOOL))
+    assert d.reason is Reason.PREDICTIVE_SHADE and d.position < 100
+
+
+def test_insulation_when_away_on_cloudy_cold_day():
+    eng = _engine(BlindType.ROLLER_SHUTTER, insulate_when_away=True)
+    d = eng.decide(Inputs(180, 20, climate=Climate.HEAT, bright=False, present=False))
+    assert (d.position, d.reason) == (0, Reason.INSULATION)
+    # With sun the shutter opens to harvest heat even when away.
+    assert eng.decide(Inputs(180, 20, climate=Climate.HEAT, present=False)).reason is Reason.HEAT_GAIN
+    # Disabled by default.
+    assert _engine().decide(Inputs(180, 20, climate=Climate.HEAT, bright=False, present=False)).reason is Reason.NO_SUN

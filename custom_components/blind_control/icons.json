@@ -1,7 +1,9 @@
 {
   "entity": {
     "sensor": {
-      "target_position": { "default": "mdi:window-shutter-cog" },
+      "target_position": {
+        "default": "mdi:window-shutter-cog"
+      },
       "reason": {
         "default": "mdi:head-lightbulb-outline",
         "state": {
@@ -13,48 +15,119 @@
           "away_shade": "mdi:home-export-outline",
           "no_sun": "mdi:weather-cloudy",
           "rule_close": "mdi:window-shutter",
-          "rule_open": "mdi:window-shutter-open"
+          "rule_open": "mdi:window-shutter-open",
+          "predictive_shade": "mdi:crystal-ball",
+          "insulation": "mdi:home-thermometer"
         }
       },
       "climate": {
         "default": "mdi:home-thermometer",
         "state": {
           "heat": "mdi:fire",
-          "cool": "mdi:snowflake"
+          "cool": "mdi:snowflake",
+          "precool": "mdi:snowflake-alert"
         }
       },
-      "profile_angle": { "default": "mdi:angle-acute" },
-      "sun_enters": { "default": "mdi:weather-sunset-up" },
-      "sun_leaves": { "default": "mdi:weather-sunset-down" },
-      "next_change": { "default": "mdi:calendar-clock" }
+      "profile_angle": {
+        "default": "mdi:angle-acute"
+      },
+      "sun_enters": {
+        "default": "mdi:weather-sunset-up"
+      },
+      "sun_leaves": {
+        "default": "mdi:weather-sunset-down"
+      },
+      "next_change": {
+        "default": "mdi:calendar-clock"
+      },
+      "solar_gain": {
+        "default": "mdi:sun-wireless"
+      },
+      "solar_potential": {
+        "default": "mdi:sun-wireless-outline"
+      },
+      "solar_energy_today": {
+        "default": "mdi:solar-power-variant"
+      },
+      "useful_heat_today": {
+        "default": "mdi:home-lightning-bolt"
+      },
+      "blocked_heat_today": {
+        "default": "mdi:shield-sun"
+      },
+      "insulation_saved_today": {
+        "default": "mdi:home-thermometer-outline"
+      },
+      "savings_today": {
+        "default": "mdi:piggy-bank"
+      },
+      "solar_forecast_today": {
+        "default": "mdi:weather-sunny-alert"
+      },
+      "predicted_temperature": {
+        "default": "mdi:thermometer-chevron-up"
+      },
+      "suggested_setpoint": {
+        "default": "mdi:thermostat"
+      },
+      "room_sensitivity": {
+        "default": "mdi:brain"
+      },
+      "cloud_cover": {
+        "default": "mdi:weather-cloudy"
+      }
     },
     "binary_sensor": {
       "sun_in_window": {
         "default": "mdi:weather-sunny-off",
-        "state": { "on": "mdi:weather-sunny" }
+        "state": {
+          "on": "mdi:weather-sunny"
+        }
       },
       "manual_override": {
         "default": "mdi:robot",
-        "state": { "on": "mdi:hand-back-right" }
+        "state": {
+          "on": "mdi:hand-back-right"
+        }
+      },
+      "ventilate": {
+        "default": "mdi:window-closed-variant",
+        "state": {
+          "on": "mdi:window-open-variant"
+        }
       }
     },
     "switch": {
       "automation": {
         "default": "mdi:robot-off",
-        "state": { "on": "mdi:robot" }
+        "state": {
+          "on": "mdi:robot"
+        }
       }
     },
     "select": {
-      "strategy": { "default": "mdi:thermostat-auto" }
+      "strategy": {
+        "default": "mdi:thermostat-auto"
+      }
     },
     "button": {
-      "resume": { "default": "mdi:play-circle-outline" },
-      "recalculate": { "default": "mdi:refresh" }
+      "resume": {
+        "default": "mdi:play-circle-outline"
+      },
+      "recalculate": {
+        "default": "mdi:refresh"
+      }
     }
   },
   "services": {
-    "resume": { "service": "mdi:play" },
-    "pause": { "service": "mdi:pause" },
-    "recalculate": { "service": "mdi:refresh" }
+    "resume": {
+      "service": "mdi:play"
+    },
+    "pause": {
+      "service": "mdi:pause"
+    },
+    "recalculate": {
+      "service": "mdi:refresh"
+    }
   }
 }

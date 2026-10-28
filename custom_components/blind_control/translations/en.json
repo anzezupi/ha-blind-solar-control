@@ -27,7 +27,12 @@
           "tilt_invert": "Invert tilt",
           "slat_width": "Slat width",
           "slat_spacing": "Slat spacing",
-          "tilt_margin": "Extra slat closing"
+          "tilt_margin": "Extra slat closing",
+          "window_width": "Window width",
+          "glazing": "Glazing",
+          "g_value": "g-value (custom)",
+          "u_value": "U-value (custom)",
+          "exterior_mount": "Blind mounted outside"
         },
         "data_description": {
           "fov_left": "How far left of straight-out the sun still reaches the glass (side walls, reveals).",
@@ -38,7 +43,11 @@
           "shade_depth": "When shading, roller blinds stop so that direct sun reaches at most this far into the room. 0 = use fixed shade position.",
           "tilt_mode": "How the device maps tilt percent to slat angle.",
           "slat_spacing": "Vertical distance between slats (usually a bit less than the width).",
-          "tilt_margin": "Close slats this many degrees more than strictly needed."
+          "tilt_margin": "Close slats this many degrees more than strictly needed.",
+          "glazing": "Used to estimate how much solar heat passes the glass.",
+          "g_value": "Optional. Solar factor from the window datasheet (overrides glazing).",
+          "u_value": "Optional. Thermal transmittance from the datasheet.",
+          "exterior_mount": "Outside blinds stop heat before the glass, inside blinds only after it."
         }
       },
       "climate": {
@@ -56,14 +65,16 @@
           "outdoor_heat_below": "Outdoor: heating season below",
           "outdoor_cool_above": "Outdoor: hot day above",
           "hysteresis": "Hysteresis",
-          "glare_protection": "Glare protection when comfortable"
+          "glare_protection": "Glare protection when comfortable",
+          "irradiance_entity": "Solar irradiance sensor (W/m²)"
         },
         "data_description": {
           "heat_setpoint": "Room below this temperature: open to let the sun heat it.",
           "cool_setpoint": "Room above this temperature: block the sun.",
           "outdoor_cool_above": "Shade pre-emptively on hot days even if the room is still comfortable.",
           "presence_entity": "When nobody is home on a hot day the blind closes completely.",
-          "glare_protection": "Also shade when the room temperature is between both thresholds."
+          "glare_protection": "Also shade when the room temperature is between both thresholds.",
+          "irradiance_entity": "Optional pyranometer / weather station. Makes the solar gain exact."
         }
       },
       "reconfigure": {
@@ -87,6 +98,7 @@
         "menu_options": {
           "geometry": "Window orientation",
           "climate": "Climate and sun",
+          "energy": "Energy and prediction",
           "positions": "Positions",
           "protection": "Wind, rain and door protection",
           "behaviour": "Behaviour and manual control",
@@ -110,11 +122,20 @@
           "tilt_invert": "Invert tilt",
           "slat_width": "Slat width",
           "slat_spacing": "Slat spacing",
-          "tilt_margin": "Extra slat closing"
+          "tilt_margin": "Extra slat closing",
+          "window_width": "Window width",
+          "glazing": "Glazing",
+          "g_value": "g-value (custom)",
+          "u_value": "U-value (custom)",
+          "exterior_mount": "Blind mounted outside"
         },
         "data_description": {
           "horizon_profile": "Optional obstacles as azimuth ranges with height, e.g. `90-130:15, 240-270:25`.",
-          "shade_depth": "0 = use fixed shade position."
+          "shade_depth": "0 = use fixed shade position.",
+          "glazing": "Used to estimate how much solar heat passes the glass.",
+          "g_value": "Optional. Solar factor from the window datasheet (overrides glazing).",
+          "u_value": "Optional. Thermal transmittance from the datasheet.",
+          "exterior_mount": "Outside blinds stop heat before the glass, inside blinds only after it."
         }
       },
       "climate": {
@@ -131,7 +152,11 @@
           "outdoor_heat_below": "Outdoor: heating season below",
           "outdoor_cool_above": "Outdoor: hot day above",
           "hysteresis": "Hysteresis",
-          "glare_protection": "Glare protection when comfortable"
+          "glare_protection": "Glare protection when comfortable",
+          "irradiance_entity": "Solar irradiance sensor (W/m²)"
+        },
+        "data_description": {
+          "irradiance_entity": "Optional pyranometer / weather station. Makes the solar gain exact."
         }
       },
       "positions": {
@@ -192,11 +217,15 @@
       },
       "rule_edit": {
         "title": "Edit rule",
-        "data": { "id": "Rule" }
+        "data": {
+          "id": "Rule"
+        }
       },
       "rule_delete": {
         "title": "Delete rule",
-        "data": { "id": "Rule" }
+        "data": {
+          "id": "Rule"
+        }
       },
       "rule_form": {
         "title": "Rule",
@@ -221,6 +250,26 @@
           "start_offset": "Minutes added to the start (negative = earlier).",
           "end_time": "Used only when end is 'Fixed time'.",
           "condition": "Optional Jinja template. The rule only applies while it renders true (e.g. a vacation helper is on)."
+        }
+      },
+      "energy": {
+        "title": "Energy and prediction",
+        "description": "The weather entity from 'Climate and sun' provides the forecast. Use 'control' for the thermostat on only one window per room.",
+        "data": {
+          "heat_price": "Price of heat",
+          "predictive": "Predictive shading",
+          "predict_hours": "Look ahead",
+          "insulate_when_away": "Insulate when away",
+          "thermostat_entity": "Room thermostat",
+          "thermostat_mode": "Thermostat coordination",
+          "max_setback": "Max. setpoint reduction",
+          "ventilation_delta": "Ventilate when outside cooler by"
+        },
+        "data_description": {
+          "heat_price": "Cost of 1 kWh of heat (fuel price / heating efficiency).",
+          "predictive": "Shade before the room overheats, using the forecast and the learned room model.",
+          "insulate_when_away": "On cold, sunless days close the blind while nobody is home to reduce heat loss.",
+          "thermostat_mode": "Suggest = only a sensor. Control = lower the thermostat while the sun heats."
         }
       }
     },
@@ -277,11 +326,28 @@
         "sat": "Saturday",
         "sun": "Sunday"
       }
+    },
+    "glazing": {
+      "options": {
+        "single": "Single glazing",
+        "double_old": "Double, older (no low-e)",
+        "double": "Double, low-e",
+        "triple": "Triple"
+      }
+    },
+    "thermostat_mode": {
+      "options": {
+        "off": "Off",
+        "suggest": "Suggest",
+        "control": "Control"
+      }
     }
   },
   "entity": {
     "sensor": {
-      "target_position": { "name": "Target position" },
+      "target_position": {
+        "name": "Target position"
+      },
       "reason": {
         "name": "Reason",
         "state": {
@@ -298,7 +364,9 @@
           "glare_shade": "Glare protection",
           "away_shade": "Closed (hot, nobody home)",
           "no_sun": "No sun on window",
-          "strategy_off": "Sun logic off"
+          "strategy_off": "Sun logic off",
+          "predictive_shade": "Shading ahead of overheating",
+          "insulation": "Closed for insulation"
         }
       },
       "climate": {
@@ -306,21 +374,77 @@
         "state": {
           "heat": "Heat",
           "cool": "Cooling",
-          "neutral": "Comfortable"
+          "neutral": "Comfortable",
+          "precool": "Cooling ahead"
         }
       },
-      "profile_angle": { "name": "Sun profile angle" },
-      "sun_enters": { "name": "Sun enters window" },
-      "sun_leaves": { "name": "Sun leaves window" },
-      "next_change": { "name": "Next schedule change" }
+      "profile_angle": {
+        "name": "Sun profile angle"
+      },
+      "sun_enters": {
+        "name": "Sun enters window"
+      },
+      "sun_leaves": {
+        "name": "Sun leaves window"
+      },
+      "next_change": {
+        "name": "Next schedule change"
+      },
+      "solar_gain": {
+        "name": "Solar gain"
+      },
+      "solar_potential": {
+        "name": "Solar potential"
+      },
+      "solar_energy_today": {
+        "name": "Solar heat today"
+      },
+      "useful_heat_today": {
+        "name": "Useful solar heat today"
+      },
+      "blocked_heat_today": {
+        "name": "Blocked heat today"
+      },
+      "insulation_saved_today": {
+        "name": "Insulation savings today"
+      },
+      "savings_today": {
+        "name": "Savings today"
+      },
+      "solar_forecast_today": {
+        "name": "Solar heat forecast today"
+      },
+      "predicted_temperature": {
+        "name": "Predicted temperature"
+      },
+      "suggested_setpoint": {
+        "name": "Suggested heating setpoint"
+      },
+      "room_sensitivity": {
+        "name": "Room solar sensitivity"
+      },
+      "cloud_cover": {
+        "name": "Cloud cover"
+      }
     },
     "binary_sensor": {
-      "sun_in_window": { "name": "Sun on window" },
-      "manual_override": { "name": "Manual override" },
-      "safety": { "name": "Wind / rain alarm" }
+      "sun_in_window": {
+        "name": "Sun on window"
+      },
+      "manual_override": {
+        "name": "Manual override"
+      },
+      "safety": {
+        "name": "Wind / rain alarm"
+      },
+      "ventilate": {
+        "name": "Ventilation recommended"
+      }
     },
     "switch": {
-      "automation": { "name": "Automation" }
+      "automation": {
+        "name": "Automation"
+      }
     },
     "select": {
       "strategy": {
@@ -335,8 +459,12 @@
       }
     },
     "button": {
-      "resume": { "name": "Resume automation" },
-      "recalculate": { "name": "Recalculate" }
+      "resume": {
+        "name": "Resume automation"
+      },
+      "recalculate": {
+        "name": "Recalculate"
+      }
     }
   },
   "exceptions": {
@@ -349,22 +477,34 @@
       "name": "Resume automation",
       "description": "Clears manual overrides and moves blinds to their automatic target.",
       "fields": {
-        "config_entry_id": { "name": "Blind", "description": "Leave empty for all blinds." }
+        "config_entry_id": {
+          "name": "Blind",
+          "description": "Leave empty for all blinds."
+        }
       }
     },
     "pause": {
       "name": "Pause automation",
       "description": "Pauses automation for a number of minutes.",
       "fields": {
-        "config_entry_id": { "name": "Blind", "description": "Leave empty for all blinds." },
-        "minutes": { "name": "Minutes", "description": "How long to pause." }
+        "config_entry_id": {
+          "name": "Blind",
+          "description": "Leave empty for all blinds."
+        },
+        "minutes": {
+          "name": "Minutes",
+          "description": "How long to pause."
+        }
       }
     },
     "recalculate": {
       "name": "Recalculate",
       "description": "Recalculates and re-applies the target immediately.",
       "fields": {
-        "config_entry_id": { "name": "Blind", "description": "Leave empty for all blinds." }
+        "config_entry_id": {
+          "name": "Blind",
+          "description": "Leave empty for all blinds."
+        }
       }
     }
   }

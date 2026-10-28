@@ -25,6 +25,22 @@ CONF_SLAT_SPACING: Final = "slat_spacing"
 CONF_TILT_MODE: Final = "tilt_mode"
 CONF_TILT_INVERT: Final = "tilt_invert"
 CONF_TILT_MARGIN: Final = "tilt_margin"
+CONF_WINDOW_WIDTH: Final = "window_width"
+CONF_GLAZING: Final = "glazing"
+CONF_G_VALUE: Final = "g_value"
+CONF_U_VALUE: Final = "u_value"
+CONF_EXTERIOR: Final = "exterior_mount"
+
+# Energy & prediction
+CONF_IRRADIANCE: Final = "irradiance_entity"
+CONF_HEAT_PRICE: Final = "heat_price"
+CONF_PREDICTIVE: Final = "predictive"
+CONF_PREDICT_HOURS: Final = "predict_hours"
+CONF_INSULATE_AWAY: Final = "insulate_when_away"
+CONF_THERMOSTAT: Final = "thermostat_entity"
+CONF_THERMOSTAT_MODE: Final = "thermostat_mode"
+CONF_MAX_SETBACK: Final = "max_setback"
+CONF_VENT_DELTA: Final = "ventilation_delta"
 
 # Climate
 CONF_INDOOR_TEMP: Final = "indoor_temperature"
@@ -99,6 +115,8 @@ TILT_MODES: Final = ("none", "90", "180")
 STRATEGIES: Final = ("auto", "heating", "cooling", "glare", "off")
 ACTIONS: Final = ("auto", "open", "close", "position", "tilt", "tilt_auto", "shade_only", "skip")
 TIME_KINDS: Final = ("time", "sunrise", "sunset")
+GLAZINGS: Final = ("single", "double_old", "double", "triple")
+THERMOSTAT_MODES: Final = ("off", "suggest", "control")
 
 DEFAULTS: Final[dict[str, object]] = {
     CONF_AZIMUTH: 180,
@@ -115,6 +133,16 @@ DEFAULTS: Final[dict[str, object]] = {
     CONF_TILT_MODE: "none",
     CONF_TILT_INVERT: False,
     CONF_TILT_MARGIN: 5,
+    CONF_WINDOW_WIDTH: 1.2,
+    CONF_GLAZING: "double",
+    CONF_EXTERIOR: False,
+    CONF_HEAT_PRICE: 0.15,
+    CONF_PREDICTIVE: True,
+    CONF_PREDICT_HOURS: 3,
+    CONF_INSULATE_AWAY: False,
+    CONF_THERMOSTAT_MODE: "suggest",
+    CONF_MAX_SETBACK: 1.5,
+    CONF_VENT_DELTA: 2.0,
     CONF_LUX_THRESHOLD: 15000,
     CONF_HEAT_SETPOINT: 21.0,
     CONF_COOL_SETPOINT: 24.5,
@@ -144,10 +172,12 @@ DEFAULTS: Final[dict[str, object]] = {
 
 # Sensible per-type overrides applied when a blind is created.
 TYPE_DEFAULTS: Final[dict[str, dict[str, object]]] = {
-    "venetian": {CONF_TILT_MODE: "90", CONF_SAFETY_POSITION: 100},
-    "tilt_only": {CONF_TILT_MODE: "180"},
+    "roller_shutter": {CONF_EXTERIOR: True},
+    "venetian": {CONF_TILT_MODE: "90", CONF_SAFETY_POSITION: 100, CONF_EXTERIOR: True},
+    "tilt_only": {CONF_TILT_MODE: "180", CONF_EXTERIOR: True},
     "curtain": {CONF_SHADE_DEPTH: 0, CONF_SHADE_POSITION: 30},
     "awning": {
+        CONF_EXTERIOR: True,
         CONF_DEFAULT_POSITION: 0,
         CONF_HEAT_POSITION: 0,
         CONF_SHADE_POSITION: 100,

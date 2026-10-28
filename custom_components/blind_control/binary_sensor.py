@@ -23,7 +23,7 @@ PARALLEL_UPDATES = 0
 class BlindBinaryDescription(BinarySensorEntityDescription):
     """Describes a Blind Control binary sensor."""
 
-    is_on_fn: Callable[[BlindState], bool]
+    is_on_fn: Callable[[BlindState], bool | None]
 
 
 BINARY_SENSORS: tuple[BlindBinaryDescription, ...] = (
@@ -32,6 +32,7 @@ BINARY_SENSORS: tuple[BlindBinaryDescription, ...] = (
     BlindBinaryDescription(
         key="safety", device_class=BinarySensorDeviceClass.SAFETY, is_on_fn=lambda s: s.safety
     ),
+    BlindBinaryDescription(key="ventilate", is_on_fn=lambda s: s.solar.ventilate),
 )
 
 

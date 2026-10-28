@@ -34,6 +34,7 @@ class Climate(StrEnum):
 
     HEAT = "heat"
     COOL = "cool"
+    PRECOOL = "precool"  # comfortable now, but the sun / a hot day will overheat the room
     NEUTRAL = "neutral"
 
 
@@ -81,8 +82,10 @@ class Reason(StrEnum):
     RULE_TILT = "rule_tilt"
     HEAT_GAIN = "heat_gain"
     COOLING_SHADE = "cooling_shade"
+    PREDICTIVE_SHADE = "predictive_shade"
     GLARE_SHADE = "glare_shade"
     AWAY_SHADE = "away_shade"
+    INSULATION = "insulation"
     NO_SUN = "no_sun"
     STRATEGY_OFF = "strategy_off"
 
@@ -211,18 +214,31 @@ class ClimateConfig:
 
 
 def climate_state(
-    prev: Climate, t_in: float | None, t_out: float | None, cfg: ClimateConfig
+    prev: Climate,
+    t_in: float | None,
+    t_out: float | None,
+    cfg: ClimateConfig,
+    t_out_max: float | None = None,
+    t_predicted: float | None = None,
 ) -> Climate:
-    """Decide what the room needs, with hysteresis to avoid flapping."""
+    """Decide what the room needs, with hysteresis to avoid flapping.
+
+    ``t_out_max`` is today's forecast high, ``t_predicted`` the room temperature
+    the learned model expects in a few hours if the sun is let in.
+    """
     h = cfg.hysteresis
     if t_in is not None:
         if t_in < cfg.heat_setpoint or (prev is Climate.HEAT and t_in < cfg.heat_setpoint + h):
             return Climate.HEAT
         if t_in > cfg.cool_setpoint or (prev is Climate.COOL and t_in > cfg.cool_setpoint - h):
             return Climate.COOL
-        # Comfortable inside but a hot day outside: shade pre-emptively.
-        if t_out is not None and t_out >= cfg.outdoor_cool_above:
-            return Climate.COOL
+        # Comfortable inside, but a hot day or the incoming sun will overheat the room.
+        hottest = max((t for t in (t_out, t_out_max) if t is not None), default=None)
+        if hottest is not None and hottest >= cfg.outdoor_cool_above:
+            return Climate.PRECOOL
+        limit = cfg.cool_setpoint - (h if prev is Climate.PRECOOL else 0.0)
+        if t_predicted is not None and t_predicted > limit:
+            return Climate.PRECOOL
         return Climate.NEUTRAL
     if t_out is not None:
         if t_out < cfg.outdoor_heat_below or (
@@ -267,6 +283,7 @@ class EngineConfig:
     tilt_invert: bool = False
     tilt_margin: float = 5.0
     glare_protection: bool = False
+    insulate_when_away: bool = False  # close on cold, sunless days when nobody is home
 
 
 @dataclass(frozen=True, slots=True)
@@ -423,8 +440,6 @@ class Engine:
     ) -> tuple[tuple[int | None, int | None], Reason]:
         if inp.strategy is Strategy.OFF:
             return self._default(), Reason.STRATEGY_OFF
-        if gamma is None or not inp.bright:
-            return self._default(), Reason.NO_SUN
 
         climate = {
             Strategy.HEATING: Climate.HEAT,
@@ -432,12 +447,18 @@ class Engine:
             Strategy.GLARE: Climate.NEUTRAL,
         }.get(inp.strategy, inp.climate)
 
+        if gamma is None or not inp.bright:
+            if climate is Climate.HEAT and inp.present is False and self.cfg.insulate_when_away:
+                return self._closed(), Reason.INSULATION
+            return self._default(), Reason.NO_SUN
+
         if climate is Climate.HEAT and not shade_only:
             return self._heat(gamma), Reason.HEAT_GAIN
-        if climate is Climate.COOL:
+        if climate in (Climate.COOL, Climate.PRECOOL):
             if inp.present is False:
                 return self._away(gamma), Reason.AWAY_SHADE
-            return self._shade(gamma), Reason.COOLING_SHADE
+            reason = Reason.COOLING_SHADE if climate is Climate.COOL else Reason.PREDICTIVE_SHADE
+            return self._shade(gamma), reason
         if shade_only or self.cfg.glare_protection or inp.strategy is Strategy.GLARE:
             return self._shade(gamma), Reason.GLARE_SHADE
         return self._default(), Reason.NO_SUN

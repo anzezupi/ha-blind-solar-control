@@ -27,7 +27,12 @@
           "tilt_invert": "Obrni nagib",
           "slat_width": "Širina lamele",
           "slat_spacing": "Razmik med lamelami",
-          "tilt_margin": "Dodatno zapiranje lamel"
+          "tilt_margin": "Dodatno zapiranje lamel",
+          "window_width": "Širina okna",
+          "glazing": "Zasteklitev",
+          "g_value": "g-vrednost (po meri)",
+          "u_value": "U-vrednost (po meri)",
+          "exterior_mount": "Senčilo je zunaj"
         },
         "data_description": {
           "fov_left": "Koliko stopinj levo od pravokotnice sonce še sije na steklo (špaleta, stene).",
@@ -38,7 +43,11 @@
           "shade_depth": "Pri senčenju se rolo ustavi tako, da direktno sonce seže največ toliko v sobo. 0 = uporabi fiksni položaj senčenja.",
           "tilt_mode": "Kako naprava preslika odstotek nagiba v kot lamel.",
           "slat_spacing": "Navpična razdalja med lamelami (običajno malo manj od širine).",
-          "tilt_margin": "Lamele zapri za toliko stopinj bolj, kot je nujno."
+          "tilt_margin": "Lamele zapri za toliko stopinj bolj, kot je nujno.",
+          "glazing": "Za oceno, koliko sončne toplote prepusti steklo.",
+          "g_value": "Neobvezno. Solarni faktor iz podatkov okna (prepiše zasteklitev).",
+          "u_value": "Neobvezno. Toplotna prehodnost iz podatkov okna.",
+          "exterior_mount": "Zunanja senčila ustavijo toploto pred steklom, notranja šele za njim."
         }
       },
       "climate": {
@@ -56,14 +65,16 @@
           "outdoor_heat_below": "Zunaj: kurilna sezona pod",
           "outdoor_cool_above": "Zunaj: vroč dan nad",
           "hysteresis": "Histereza",
-          "glare_protection": "Zaščita pred bleščanjem, ko je prijetno"
+          "glare_protection": "Zaščita pred bleščanjem, ko je prijetno",
+          "irradiance_entity": "Senzor sončnega obsevanja (W/m²)"
         },
         "data_description": {
           "heat_setpoint": "Soba hladnejša od tega: odpri, da jo sonce segreje.",
           "cool_setpoint": "Soba toplejša od tega: zapri pred soncem.",
           "outdoor_cool_above": "Na vroče dni senči preventivno, četudi je v sobi še prijetno.",
           "presence_entity": "Če na vroč dan ni nikogar doma, se senčilo zapre do konca.",
-          "glare_protection": "Senči tudi, ko je temperatura med obema pragovoma."
+          "glare_protection": "Senči tudi, ko je temperatura med obema pragovoma.",
+          "irradiance_entity": "Neobvezen piranometer / vremenska postaja. Natančnejši sončni dobitek."
         }
       },
       "reconfigure": {
@@ -87,6 +98,7 @@
         "menu_options": {
           "geometry": "Orientacija okna",
           "climate": "Klima in sonce",
+          "energy": "Energija in napoved",
           "positions": "Položaji",
           "protection": "Zaščita: veter, dež, vrata",
           "behaviour": "Obnašanje in ročno upravljanje",
@@ -110,11 +122,20 @@
           "tilt_invert": "Obrni nagib",
           "slat_width": "Širina lamele",
           "slat_spacing": "Razmik med lamelami",
-          "tilt_margin": "Dodatno zapiranje lamel"
+          "tilt_margin": "Dodatno zapiranje lamel",
+          "window_width": "Širina okna",
+          "glazing": "Zasteklitev",
+          "g_value": "g-vrednost (po meri)",
+          "u_value": "U-vrednost (po meri)",
+          "exterior_mount": "Senčilo je zunaj"
         },
         "data_description": {
           "horizon_profile": "Neobvezne ovire kot razponi azimuta z višino, npr. `90-130:15, 240-270:25`.",
-          "shade_depth": "0 = uporabi fiksni položaj senčenja."
+          "shade_depth": "0 = uporabi fiksni položaj senčenja.",
+          "glazing": "Za oceno, koliko sončne toplote prepusti steklo.",
+          "g_value": "Neobvezno. Solarni faktor iz podatkov okna (prepiše zasteklitev).",
+          "u_value": "Neobvezno. Toplotna prehodnost iz podatkov okna.",
+          "exterior_mount": "Zunanja senčila ustavijo toploto pred steklom, notranja šele za njim."
         }
       },
       "climate": {
@@ -131,7 +152,11 @@
           "outdoor_heat_below": "Zunaj: kurilna sezona pod",
           "outdoor_cool_above": "Zunaj: vroč dan nad",
           "hysteresis": "Histereza",
-          "glare_protection": "Zaščita pred bleščanjem, ko je prijetno"
+          "glare_protection": "Zaščita pred bleščanjem, ko je prijetno",
+          "irradiance_entity": "Senzor sončnega obsevanja (W/m²)"
+        },
+        "data_description": {
+          "irradiance_entity": "Neobvezen piranometer / vremenska postaja. Natančnejši sončni dobitek."
         }
       },
       "positions": {
@@ -192,11 +217,15 @@
       },
       "rule_edit": {
         "title": "Uredi pravilo",
-        "data": { "id": "Pravilo" }
+        "data": {
+          "id": "Pravilo"
+        }
       },
       "rule_delete": {
         "title": "Izbriši pravilo",
-        "data": { "id": "Pravilo" }
+        "data": {
+          "id": "Pravilo"
+        }
       },
       "rule_form": {
         "title": "Pravilo",
@@ -221,6 +250,26 @@
           "start_offset": "Minute, prištete začetku (negativno = prej).",
           "end_time": "Upošteva se le, če je konec 'Fiksni čas'.",
           "condition": "Neobvezna Jinja predloga. Pravilo velja le, ko je rezultat resničen (npr. pomočnik za dopust je vklopljen)."
+        }
+      },
+      "energy": {
+        "title": "Energija in napoved",
+        "description": "Napoved pride iz vremenske entitete v 'Klima in sonce'. Način 'krmili' za termostat uporabi le pri enem oknu na sobo.",
+        "data": {
+          "heat_price": "Cena toplote",
+          "predictive": "Napovedno senčenje",
+          "predict_hours": "Napoved za naslednjih",
+          "insulate_when_away": "Izoliraj, ko nikogar ni doma",
+          "thermostat_entity": "Termostat sobe",
+          "thermostat_mode": "Usklajevanje s termostatom",
+          "max_setback": "Največje znižanje temperature",
+          "ventilation_delta": "Zračenje, ko je zunaj hladneje za"
+        },
+        "data_description": {
+          "heat_price": "Cena 1 kWh toplote (cena energenta / izkoristek ogrevanja).",
+          "predictive": "Senči, preden se soba pregreje – z napovedjo in naučenim modelom sobe.",
+          "insulate_when_away": "Ob mrzlih dneh brez sonca zapri senčilo, ko nikogar ni doma, da zmanjšaš toplotne izgube.",
+          "thermostat_mode": "Predlagaj = samo senzor. Krmili = zniža termostat, ko greje sonce."
         }
       }
     },
@@ -277,11 +326,28 @@
         "sat": "Sobota",
         "sun": "Nedelja"
       }
+    },
+    "glazing": {
+      "options": {
+        "single": "Enojno steklo",
+        "double_old": "Dvoslojno, starejše",
+        "double": "Dvoslojno, low-e",
+        "triple": "Troslojno"
+      }
+    },
+    "thermostat_mode": {
+      "options": {
+        "off": "Izklopljeno",
+        "suggest": "Predlagaj",
+        "control": "Krmili"
+      }
     }
   },
   "entity": {
     "sensor": {
-      "target_position": { "name": "Ciljni položaj" },
+      "target_position": {
+        "name": "Ciljni položaj"
+      },
       "reason": {
         "name": "Razlog",
         "state": {
@@ -298,7 +364,9 @@
           "glare_shade": "Zaščita pred bleščanjem",
           "away_shade": "Zaprto (vroče, nikogar doma)",
           "no_sun": "Ni sonca na oknu",
-          "strategy_off": "Sončna logika izklopljena"
+          "strategy_off": "Sončna logika izklopljena",
+          "predictive_shade": "Preventivno senčenje",
+          "insulation": "Zaprto za izolacijo"
         }
       },
       "climate": {
@@ -306,21 +374,77 @@
         "state": {
           "heat": "Gretje",
           "cool": "Hlajenje",
-          "neutral": "Prijetno"
+          "neutral": "Prijetno",
+          "precool": "Preventivno hlajenje"
         }
       },
-      "profile_angle": { "name": "Profilni kot sonca" },
-      "sun_enters": { "name": "Sonce pride na okno" },
-      "sun_leaves": { "name": "Sonce zapusti okno" },
-      "next_change": { "name": "Naslednja sprememba urnika" }
+      "profile_angle": {
+        "name": "Profilni kot sonca"
+      },
+      "sun_enters": {
+        "name": "Sonce pride na okno"
+      },
+      "sun_leaves": {
+        "name": "Sonce zapusti okno"
+      },
+      "next_change": {
+        "name": "Naslednja sprememba urnika"
+      },
+      "solar_gain": {
+        "name": "Sončni dobitek"
+      },
+      "solar_potential": {
+        "name": "Sončni potencial"
+      },
+      "solar_energy_today": {
+        "name": "Sončna toplota danes"
+      },
+      "useful_heat_today": {
+        "name": "Koristna sončna toplota danes"
+      },
+      "blocked_heat_today": {
+        "name": "Zadržana toplota danes"
+      },
+      "insulation_saved_today": {
+        "name": "Prihranek izolacije danes"
+      },
+      "savings_today": {
+        "name": "Prihranek danes"
+      },
+      "solar_forecast_today": {
+        "name": "Napoved sončne toplote danes"
+      },
+      "predicted_temperature": {
+        "name": "Napovedana temperatura"
+      },
+      "suggested_setpoint": {
+        "name": "Predlagana temperatura ogrevanja"
+      },
+      "room_sensitivity": {
+        "name": "Sončna občutljivost sobe"
+      },
+      "cloud_cover": {
+        "name": "Oblačnost"
+      }
     },
     "binary_sensor": {
-      "sun_in_window": { "name": "Sonce na oknu" },
-      "manual_override": { "name": "Ročni poseg" },
-      "safety": { "name": "Alarm veter / dež" }
+      "sun_in_window": {
+        "name": "Sonce na oknu"
+      },
+      "manual_override": {
+        "name": "Ročni poseg"
+      },
+      "safety": {
+        "name": "Alarm veter / dež"
+      },
+      "ventilate": {
+        "name": "Priporočeno zračenje"
+      }
     },
     "switch": {
-      "automation": { "name": "Avtomatika" }
+      "automation": {
+        "name": "Avtomatika"
+      }
     },
     "select": {
       "strategy": {
@@ -335,8 +459,12 @@
       }
     },
     "button": {
-      "resume": { "name": "Nadaljuj avtomatiko" },
-      "recalculate": { "name": "Preračunaj" }
+      "resume": {
+        "name": "Nadaljuj avtomatiko"
+      },
+      "recalculate": {
+        "name": "Preračunaj"
+      }
     }
   },
   "exceptions": {
@@ -349,22 +477,34 @@
       "name": "Nadaljuj avtomatiko",
       "description": "Počisti ročne posege in premakne senčila na samodejni cilj.",
       "fields": {
-        "config_entry_id": { "name": "Senčilo", "description": "Prazno = vsa senčila." }
+        "config_entry_id": {
+          "name": "Senčilo",
+          "description": "Prazno = vsa senčila."
+        }
       }
     },
     "pause": {
       "name": "Začasno ustavi avtomatiko",
       "description": "Ustavi avtomatiko za določeno število minut.",
       "fields": {
-        "config_entry_id": { "name": "Senčilo", "description": "Prazno = vsa senčila." },
-        "minutes": { "name": "Minute", "description": "Kako dolgo naj bo ustavljeno." }
+        "config_entry_id": {
+          "name": "Senčilo",
+          "description": "Prazno = vsa senčila."
+        },
+        "minutes": {
+          "name": "Minute",
+          "description": "Kako dolgo naj bo ustavljeno."
+        }
       }
     },
     "recalculate": {
       "name": "Preračunaj",
       "description": "Takoj preračuna in ponovno uporabi cilj.",
       "fields": {
-        "config_entry_id": { "name": "Senčilo", "description": "Prazno = vsa senčila." }
+        "config_entry_id": {
+          "name": "Senčilo",
+          "description": "Prazno = vsa senčila."
+        }
       }
     }
   }

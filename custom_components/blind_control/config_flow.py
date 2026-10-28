@@ -37,19 +37,26 @@ from .const import (
     CONF_DEFAULT_POSITION,
     CONF_DEFAULT_TILT,
     CONF_DRY_RUN,
+    CONF_EXTERIOR,
     CONF_FOV_LEFT,
     CONF_FOV_RIGHT,
+    CONF_G_VALUE,
     CONF_GLARE,
+    CONF_GLAZING,
     CONF_HEAT_POSITION,
+    CONF_HEAT_PRICE,
     CONF_HEAT_SETPOINT,
     CONF_HORIZON,
     CONF_HYSTERESIS,
     CONF_INDOOR_TEMP,
+    CONF_INSULATE_AWAY,
     CONF_INVERT_POSITION,
+    CONF_IRRADIANCE,
     CONF_LOCKOUT_POSITION,
     CONF_LUX,
     CONF_LUX_THRESHOLD,
     CONF_MAX_ELEVATION,
+    CONF_MAX_SETBACK,
     CONF_MIN_DELTA,
     CONF_MIN_ELEVATION,
     CONF_MIN_INTERVAL,
@@ -60,6 +67,8 @@ from .const import (
     CONF_OVERRIDE_TOLERANCE,
     CONF_OVERRIDE_UNTIL_RULE,
     CONF_POSITION_STEP,
+    CONF_PREDICT_HOURS,
+    CONF_PREDICTIVE,
     CONF_PRESENCE,
     CONF_RAIN,
     CONF_RULES,
@@ -72,16 +81,22 @@ from .const import (
     CONF_SILL_HEIGHT,
     CONF_SLAT_SPACING,
     CONF_SLAT_WIDTH,
+    CONF_THERMOSTAT,
+    CONF_THERMOSTAT_MODE,
     CONF_TILT_INVERT,
     CONF_TILT_MARGIN,
     CONF_TILT_MODE,
+    CONF_U_VALUE,
     CONF_UPDATE_INTERVAL,
+    CONF_VENT_DELTA,
     CONF_WEATHER,
     CONF_WIND,
     CONF_WIND_THRESHOLD,
     CONF_WINDOW_HEIGHT,
+    CONF_WINDOW_WIDTH,
     DEFAULTS,
     DOMAIN,
+    GLAZINGS,
     RULE_ACTION,
     RULE_CONDITION,
     RULE_DAYS,
@@ -96,6 +111,7 @@ from .const import (
     RULE_START_TIME,
     RULE_START_TYPE,
     RULE_TILT,
+    THERMOSTAT_MODES,
     TILT_MODES,
     TIME_KINDS,
     TYPE_DEFAULTS,
@@ -110,15 +126,12 @@ TILT_TYPES = ("venetian", "tilt_only")
 
 
 def _num(lo: float, hi: float, step: float = 1, unit: str | None = None, slider: bool = False) -> NumberSelector:
-    return NumberSelector(
-        NumberSelectorConfig(
-            min=lo,
-            max=hi,
-            step=step,
-            unit_of_measurement=unit,
-            mode=NumberSelectorMode.SLIDER if slider else NumberSelectorMode.BOX,
-        )
+    config = NumberSelectorConfig(
+        min=lo, max=hi, step=step, mode=NumberSelectorMode.SLIDER if slider else NumberSelectorMode.BOX
     )
+    if unit:
+        config["unit_of_measurement"] = unit
+    return NumberSelector(config)
 
 
 def _pct() -> NumberSelector:
@@ -174,9 +187,14 @@ def geometry_schema(blind_type: str, v: dict[str, Any]) -> vol.Schema:
         _req(CONF_MIN_ELEVATION, v): _num(0, 90, 1, DEGREE),
         _req(CONF_MAX_ELEVATION, v): _num(0, 90, 1, DEGREE),
         _opt(CONF_HORIZON, v): TextSelector(),
+        _req(CONF_WINDOW_WIDTH, v): _num(0.1, 10, 0.05, UnitOfLength.METERS),
         _req(CONF_WINDOW_HEIGHT, v): _num(0.1, 6, 0.05, UnitOfLength.METERS),
         _req(CONF_SILL_HEIGHT, v): _num(0, 5, 0.05, UnitOfLength.METERS),
         _req(CONF_SHADE_DEPTH, v): _num(0, 5, 0.05, UnitOfLength.METERS),
+        _req(CONF_GLAZING, v): _select(GLAZINGS, "glazing"),
+        _opt(CONF_G_VALUE, v): _num(0.1, 0.9, 0.01),
+        _opt(CONF_U_VALUE, v): _num(0.3, 6, 0.1, "W/m²K"),
+        _req(CONF_EXTERIOR, v): BooleanSelector(),
     }
     if blind_type in TILT_TYPES:
         fields |= {
@@ -197,6 +215,7 @@ def climate_schema(v: dict[str, Any]) -> vol.Schema:
             _opt(CONF_WEATHER, v): _entity("weather"),
             _opt(CONF_LUX, v): _entity("sensor"),
             _req(CONF_LUX_THRESHOLD, v): _num(0, 200000, 100, "lx"),
+            _opt(CONF_IRRADIANCE, v): _entity("sensor"),
             _opt(CONF_PRESENCE, v): _entity(
                 "person", "zone", "group", "binary_sensor", "input_boolean", "device_tracker"
             ),
@@ -224,6 +243,21 @@ def positions_schema(blind_type: str, v: dict[str, Any]) -> vol.Schema:
     if blind_type in TILT_TYPES:
         fields[_opt(CONF_DEFAULT_TILT, v)] = _pct()
     return vol.Schema(fields)
+
+
+def energy_schema(v: dict[str, Any]) -> vol.Schema:
+    return vol.Schema(
+        {
+            _req(CONF_HEAT_PRICE, v): _num(0, 2, 0.01, "/kWh"),
+            _req(CONF_PREDICTIVE, v): BooleanSelector(),
+            _req(CONF_PREDICT_HOURS, v): _num(1, 8, 0.5, UnitOfTime.HOURS),
+            _req(CONF_INSULATE_AWAY, v): BooleanSelector(),
+            _opt(CONF_THERMOSTAT, v): _entity("climate"),
+            _req(CONF_THERMOSTAT_MODE, v): _select(THERMOSTAT_MODES, "thermostat_mode"),
+            _req(CONF_MAX_SETBACK, v): _num(0, 5, 0.5, "°C"),
+            _req(CONF_VENT_DELTA, v): _num(0.5, 10, 0.5, "°C"),
+        }
+    )
 
 
 def protection_schema(v: dict[str, Any]) -> vol.Schema:
@@ -414,7 +448,7 @@ class BlindControlOptionsFlow(OptionsFlow):
     async def async_step_init(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         return self.async_show_menu(
             step_id="init",
-            menu_options=["geometry", "climate", "positions", "protection", "behaviour", "rules", "save"],
+            menu_options=["geometry", "climate", "energy", "positions", "protection", "behaviour", "rules", "save"],
         )
 
     async def _form(self, step_id: str, schema: vol.Schema, user_input: dict[str, Any] | None) -> ConfigFlowResult:
@@ -428,6 +462,9 @@ class BlindControlOptionsFlow(OptionsFlow):
 
     async def async_step_climate(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         return await self._form("climate", climate_schema(self.opts), user_input)
+
+    async def async_step_energy(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        return await self._form("energy", energy_schema(self.opts), user_input)
 
     async def async_step_positions(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         return await self._form("positions", positions_schema(self.blind_type, self.opts), user_input)

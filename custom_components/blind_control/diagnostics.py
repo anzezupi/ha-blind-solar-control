@@ -16,5 +16,6 @@ async def async_get_config_entry_diagnostics(hass: HomeAssistant, entry: BlindCo
         "config": coordinator.cfg,
         "enabled": coordinator.enabled,
         "strategy": coordinator.strategy,
+        "room_model": coordinator.energy.model.as_dict(),
         "state": asdict(coordinator.data) if coordinator.data else None,
     }
