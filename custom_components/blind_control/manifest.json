@@ -1,9 +1,9 @@
 {
   "domain": "blind_control",
   "name": "Blind Control",
+  "after_dependencies": ["frontend", "http"],
   "codeowners": ["@anzezupi"],
   "config_flow": true,
-  "after_dependencies": ["frontend", "http"],
   "documentation": "https://github.com/anzezupi/ha-blind-solar-control",
   "integration_type": "service",
   "iot_class": "calculated",
