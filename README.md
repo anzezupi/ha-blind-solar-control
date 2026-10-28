@@ -2,6 +2,7 @@
 
 [![HACS Custom](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://hacs.xyz/docs/faq/custom_repositories)
 [![Validate](https://github.com/anzezupi/ha-blind-solar-control/actions/workflows/validate.yml/badge.svg)](https://github.com/anzezupi/ha-blind-solar-control/actions/workflows/validate.yml)
+[![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-PayPal-00457C?logo=paypal&logoColor=white)](https://www.paypal.com/paypalme/anzezupi)
 
 Most blind automations treat the sun as something to keep out. **Blind Control treats it as free energy.**
 
@@ -120,6 +121,12 @@ pytest
 
 - `engine.py` (decisions), `schedule.py` (rules) and `thermal.py` (physics and room model) are pure Python.
 - `tests/ha` runs the integration inside a real Home Assistant instance. Those tests are skipped when `pytest-homeassistant-custom-component` isn't installed.
+
+## Support
+
+If Blind Control saves you some heating money, consider passing a little of it on:
+
+[![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-PayPal-00457C?logo=paypal&logoColor=white)](https://www.paypal.com/paypalme/anzezupi)
 
 ## License
 
